@@ -76,7 +76,7 @@ class RegisterViewController: UIViewController {
     // MARK: - Actions
     
     @objc func didTapChangeProfile() {
-        print("Change Image")
+        presentPhotoActionSheet()
     }
     
     @objc func registerButtonTapped() {
@@ -91,7 +91,7 @@ class RegisterViewController: UIViewController {
             return
         }
         
-        // Firebase login
+        // Firebase sign in
     }
     
     // MARK: - Helpers
@@ -142,4 +142,51 @@ extension RegisterViewController: UITextFieldDelegate {
         return true
     }
     
+}
+
+extension RegisterViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    
+    func presentPhotoActionSheet() {
+        let actionSheet = UIAlertController(title: "프로필 사진 선택",
+                                            message: nil,
+                                            preferredStyle: .actionSheet)
+        let presentCamera = UIAlertAction(title: "사진 촬영", style: .default) { [weak self] _ in
+            self?.presentCamera()
+        }
+        let showLibrary = UIAlertAction(title: "앨범", style: .default) { [weak self] _ in
+            self?.presentPhotoPicker()
+        }
+        let cancel = UIAlertAction(title: "돌아가기", style: .cancel)
+        
+        actionSheet.addAction(presentCamera)
+        actionSheet.addAction(showLibrary)
+        actionSheet.addAction(cancel)
+        self.present(actionSheet, animated: true)
+    }
+    
+    func presentCamera() {
+        let pickerVC = UIImagePickerController()
+        pickerVC.sourceType = .camera
+        pickerVC.delegate = self
+        pickerVC.allowsEditing = true  // 사진 정사각형 형태로 지정 가능하도록
+        present(pickerVC, animated: true)
+    }
+    
+    func presentPhotoPicker() {
+        let pickerVC = UIImagePickerController()
+        pickerVC.sourceType = .photoLibrary
+        pickerVC.delegate = self
+        pickerVC.allowsEditing = true
+        present(pickerVC, animated: true)
+    }
+    
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        picker.dismiss(animated: true)
+        let selectedImage = info[UIImagePickerController.InfoKey.editedImage] as? UIImage
+        imageView.image = selectedImage
+    }
+    
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        picker.dismiss(animated: true)
+    }
 }
