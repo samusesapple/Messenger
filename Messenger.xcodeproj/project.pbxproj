@@ -19,6 +19,10 @@
 		F1DECF932A04F2F1008DE277 /* VideoPlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1DECF922A04F2F1008DE277 /* VideoPlayerViewController.swift */; };
 		F1DECF952A04F322008DE277 /* NewConversationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1DECF942A04F322008DE277 /* NewConversationViewController.swift */; };
 		F1DECF972A04F32D008DE277 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1DECF962A04F32D008DE277 /* ProfileViewController.swift */; };
+		F1DECF9A2A04F8AB008DE277 /* UIVIew+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1DECF992A04F8AB008DE277 /* UIVIew+Extensions.swift */; };
+		F1DECF9D2A04FD0B008DE277 /* AuthTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1DECF9C2A04FD0B008DE277 /* AuthTextField.swift */; };
+		F1DECF9F2A04FF2F008DE277 /* UIViewController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1DECF9E2A04FF2F008DE277 /* UIViewController+Extensions.swift */; };
+		F1DECFA12A050383008DE277 /* AuthButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1DECFA02A050383008DE277 /* AuthButton.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -36,6 +40,10 @@
 		F1DECF922A04F2F1008DE277 /* VideoPlayerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPlayerViewController.swift; sourceTree = "<group>"; };
 		F1DECF942A04F322008DE277 /* NewConversationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewConversationViewController.swift; sourceTree = "<group>"; };
 		F1DECF962A04F32D008DE277 /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
+		F1DECF992A04F8AB008DE277 /* UIVIew+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIVIew+Extensions.swift"; sourceTree = "<group>"; };
+		F1DECF9C2A04FD0B008DE277 /* AuthTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthTextField.swift; sourceTree = "<group>"; };
+		F1DECF9E2A04FF2F008DE277 /* UIViewController+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extensions.swift"; sourceTree = "<group>"; };
+		F1DECFA02A050383008DE277 /* AuthButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthButton.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -68,29 +76,31 @@
 		F1DECF712A04E8D5008DE277 /* Messenger */ = {
 			isa = PBXGroup;
 			children = (
-				F1DECF8A2A04F0DA008DE277 /* Resources */,
+				F1DECF722A04E8D5008DE277 /* AppDelegate.swift */,
+				F1DECF742A04E8D5008DE277 /* SceneDelegate.swift */,
 				F1DECF892A04F0D4008DE277 /* ViewModels */,
 				F1DECF882A04F0CB008DE277 /* Models */,
 				F1DECF872A04F0C5008DE277 /* Views */,
-				F1DECF862A04F0B8008DE277 /* Controllers */,
+				F1DECF862A04F0B8008DE277 /* Controls */,
+				F1DECF9B2A04F962008DE277 /* Extensions */,
+				F1DECF8A2A04F0DA008DE277 /* Utilities */,
 				F1DECF7B2A04E8D5008DE277 /* Assets.xcassets */,
 				F1DECF802A04E8D5008DE277 /* Info.plist */,
 			);
 			path = Messenger;
 			sourceTree = "<group>";
 		};
-		F1DECF862A04F0B8008DE277 /* Controllers */ = {
+		F1DECF862A04F0B8008DE277 /* Controls */ = {
 			isa = PBXGroup;
 			children = (
 				F1DECF762A04E8D5008DE277 /* ConversationViewController.swift */,
-				F1DECF8C2A04F2AE008DE277 /* LoginViewController.swift */,
-				F1DECF8E2A04F2C2008DE277 /* RegisterViewController.swift */,
+				F1DECF982A04F500008DE277 /* Authentication */,
 				F1DECF902A04F2E6008DE277 /* PhotoViewerViewController.swift */,
 				F1DECF922A04F2F1008DE277 /* VideoPlayerViewController.swift */,
 				F1DECF942A04F322008DE277 /* NewConversationViewController.swift */,
 				F1DECF962A04F32D008DE277 /* ProfileViewController.swift */,
 			);
-			path = Controllers;
+			path = Controls;
 			sourceTree = "<group>";
 		};
 		F1DECF872A04F0C5008DE277 /* Views */ = {
@@ -115,13 +125,12 @@
 			path = ViewModels;
 			sourceTree = "<group>";
 		};
-		F1DECF8A2A04F0DA008DE277 /* Resources */ = {
+		F1DECF8A2A04F0DA008DE277 /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
-				F1DECF722A04E8D5008DE277 /* AppDelegate.swift */,
-				F1DECF742A04E8D5008DE277 /* SceneDelegate.swift */,
+				F1DECFA22A050936008DE277 /* Authentication */,
 			);
-			path = Resources;
+			path = Utilities;
 			sourceTree = "<group>";
 		};
 		F1DECF8B2A04F12A008DE277 /* Storyboards */ = {
@@ -131,6 +140,33 @@
 				F1DECF782A04E8D5008DE277 /* Main.storyboard */,
 			);
 			name = Storyboards;
+			sourceTree = "<group>";
+		};
+		F1DECF982A04F500008DE277 /* Authentication */ = {
+			isa = PBXGroup;
+			children = (
+				F1DECF8C2A04F2AE008DE277 /* LoginViewController.swift */,
+				F1DECF8E2A04F2C2008DE277 /* RegisterViewController.swift */,
+			);
+			path = Authentication;
+			sourceTree = "<group>";
+		};
+		F1DECF9B2A04F962008DE277 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				F1DECF992A04F8AB008DE277 /* UIVIew+Extensions.swift */,
+				F1DECF9E2A04FF2F008DE277 /* UIViewController+Extensions.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		F1DECFA22A050936008DE277 /* Authentication */ = {
+			isa = PBXGroup;
+			children = (
+				F1DECF9C2A04FD0B008DE277 /* AuthTextField.swift */,
+				F1DECFA02A050383008DE277 /* AuthButton.swift */,
+			);
+			path = Authentication;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -205,14 +241,18 @@
 			buildActionMask = 2147483647;
 			files = (
 				F1DECF8D2A04F2AE008DE277 /* LoginViewController.swift in Sources */,
+				F1DECFA12A050383008DE277 /* AuthButton.swift in Sources */,
 				F1DECF932A04F2F1008DE277 /* VideoPlayerViewController.swift in Sources */,
 				F1DECF952A04F322008DE277 /* NewConversationViewController.swift in Sources */,
 				F1DECF8F2A04F2C2008DE277 /* RegisterViewController.swift in Sources */,
 				F1DECF772A04E8D5008DE277 /* ConversationViewController.swift in Sources */,
+				F1DECF9A2A04F8AB008DE277 /* UIVIew+Extensions.swift in Sources */,
 				F1DECF732A04E8D5008DE277 /* AppDelegate.swift in Sources */,
+				F1DECF9F2A04FF2F008DE277 /* UIViewController+Extensions.swift in Sources */,
 				F1DECF972A04F32D008DE277 /* ProfileViewController.swift in Sources */,
 				F1DECF752A04E8D5008DE277 /* SceneDelegate.swift in Sources */,
 				F1DECF912A04F2E6008DE277 /* PhotoViewerViewController.swift in Sources */,
+				F1DECF9D2A04FD0B008DE277 /* AuthTextField.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
