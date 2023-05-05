@@ -22,6 +22,7 @@ class RegisterViewController: UIViewController {
         iv.image = UIImage(systemName: "person")
         iv.tintColor = .gray
         iv.contentMode = .scaleAspectFit
+        iv.clipsToBounds = true
         return iv
     }()
     
@@ -183,7 +184,11 @@ extension RegisterViewController: UIImagePickerControllerDelegate, UINavigationC
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         picker.dismiss(animated: true)
         let selectedImage = info[UIImagePickerController.InfoKey.editedImage] as? UIImage
-        imageView.image = selectedImage
+        DispatchQueue.main.async { [weak self] in
+            self?.imageView.makeRounded()
+            self?.imageView.image = selectedImage
+        }
+
     }
     
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {

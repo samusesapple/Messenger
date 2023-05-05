@@ -23,6 +23,7 @@
 		F1DECF9D2A04FD0B008DE277 /* AuthTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1DECF9C2A04FD0B008DE277 /* AuthTextField.swift */; };
 		F1DECF9F2A04FF2F008DE277 /* UIViewController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1DECF9E2A04FF2F008DE277 /* UIViewController+Extensions.swift */; };
 		F1DECFA12A050383008DE277 /* AuthButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1DECFA02A050383008DE277 /* AuthButton.swift */; };
+		F1DECFA42A052018008DE277 /* UIImageView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1DECFA32A052018008DE277 /* UIImageView+Extensions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -44,6 +45,7 @@
 		F1DECF9C2A04FD0B008DE277 /* AuthTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthTextField.swift; sourceTree = "<group>"; };
 		F1DECF9E2A04FF2F008DE277 /* UIViewController+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extensions.swift"; sourceTree = "<group>"; };
 		F1DECFA02A050383008DE277 /* AuthButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthButton.swift; sourceTree = "<group>"; };
+		F1DECFA32A052018008DE277 /* UIImageView+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImageView+Extensions.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -156,6 +158,7 @@
 			children = (
 				F1DECF992A04F8AB008DE277 /* UIVIew+Extensions.swift */,
 				F1DECF9E2A04FF2F008DE277 /* UIViewController+Extensions.swift */,
+				F1DECFA32A052018008DE277 /* UIImageView+Extensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -248,6 +251,7 @@
 				F1DECF772A04E8D5008DE277 /* ConversationViewController.swift in Sources */,
 				F1DECF9A2A04F8AB008DE277 /* UIVIew+Extensions.swift in Sources */,
 				F1DECF732A04E8D5008DE277 /* AppDelegate.swift in Sources */,
+				F1DECFA42A052018008DE277 /* UIImageView+Extensions.swift in Sources */,
 				F1DECF9F2A04FF2F008DE277 /* UIViewController+Extensions.swift in Sources */,
 				F1DECF972A04F32D008DE277 /* ProfileViewController.swift in Sources */,
 				F1DECF752A04E8D5008DE277 /* SceneDelegate.swift in Sources */,
