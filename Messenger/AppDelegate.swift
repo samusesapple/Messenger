@@ -8,14 +8,18 @@
 import UIKit
 import FirebaseCore
 import FBSDKLoginKit
+import GoogleSignIn
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        // Firebase
+        FirebaseApp.configure()
+        // Facebook
         ApplicationDelegate.shared.application(application, didFinishLaunchingWithOptions: launchOptions)
         
-        FirebaseApp.configure()
+        // Google
         
         return true
     }

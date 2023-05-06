@@ -6,8 +6,10 @@
 //
 
 import UIKit
+import FirebaseCore
 import FirebaseAuth
 import FBSDKLoginKit
+import GoogleSignIn
 
 class LoginViewController: UIViewController {
     
@@ -103,20 +105,25 @@ class LoginViewController: UIViewController {
         let fbLoginManager = LoginManager()
         fbLoginManager.logIn(permissions: ["email"], from: self) { (result, error) -> Void in
             guard let result = result, error == nil else { return }
-            // if user cancel the login
             if result.isCancelled {
                 print("로그인 취소")
                 return
-            }
+            } 
             if result.grantedPermissions.contains("email")
             {
-                self.getFBUserData()
+                guard let token = result.token?.tokenString as? String else { return }
+                self.getFBUserData(with: token)
             }
         }
     }
     
     @objc func handleGoogleLogin() {
-        print(#function)
+        let config = GIDConfiguration(clientID: "com.googleusercontent.apps.271630436451-5giplo60uak27oe2d0fsol8gi11gsivl")
+               GIDSignIn.sharedInstance.configuration = config
+                GIDSignIn.sharedInstance.signIn(withPresenting: self) { [weak self] user, error in
+                    if let error = error { print(error); return }
+                    // do something
+                }
     }
     
     @objc func loginButtonTapped() {
@@ -177,8 +184,8 @@ class LoginViewController: UIViewController {
         present(alert, animated: true)
     }
     
-    func getFBUserData() {
-        guard let token = AccessToken.current?.tokenString as? String else { return }
+    func getFBUserData(with token: String) {
+//        guard let token = AccessToken.current?.tokenString as? String else { return }
         // 토큰 사용해서 FB에 있는 유저 데이터 요청 만들기 (email, name)
         let facebookRequest = FBSDKLoginKit.GraphRequest(graphPath: "me",
                                                          parameters: ["fields": "email, name"],
