@@ -27,11 +27,11 @@ extension DatabaseManager {
         database.child(safeEmail).observeSingleEvent(of: .value) { snapshot in
             guard snapshot.value as? String != nil else {
                 // 존재하지 않는 이메일
-                completion(true)
+                completion(false)
                 return
             }
            // 이미 존재하는 이메일
-            completion(false)
+            completion(true)
         }
     }
     

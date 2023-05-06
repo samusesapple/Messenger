@@ -7,6 +7,7 @@
 
 import UIKit
 import FirebaseAuth
+import FBSDKLoginKit
 
 class LoginViewController: UIViewController {
     
@@ -51,6 +52,29 @@ class LoginViewController: UIViewController {
         return button
     }()
     
+    private let facebookLoginButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setImage(UIImage(named: "facebook")?.withRenderingMode(.alwaysOriginal), for: .normal)
+        button.setDimensions(height: 50, width: 50)
+        button.addTarget(self, action: #selector(handleFacebookLogin), for: .touchUpInside)
+        return button
+    }()
+    
+    private let googleLoginButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setImage(UIImage(named: "google")?.withRenderingMode(.alwaysOriginal), for: .normal)
+        button.setDimensions(height: 50, width: 50)
+        button.addTarget(self, action: #selector(handleGoogleLogin), for: .touchUpInside)
+        return button
+    }()
+    
+    private lazy var socialButtonStackView: UIStackView = {
+       let stack = UIStackView(arrangedSubviews: [facebookLoginButton, googleLoginButton])
+        stack.spacing = 30
+        stack.distribution = .fillProportionally
+        return stack
+    }()
+    
     // MARK: - Lifecycle
     
     override func viewDidLoad() {
@@ -74,8 +98,15 @@ class LoginViewController: UIViewController {
         navigationController?.pushViewController(registerVC, animated: true)
     }
     
+    @objc func handleFacebookLogin() {
+        print(#function)
+    }
+    
+    @objc func handleGoogleLogin() {
+        print(#function)
+    }
+    
     @objc func loginButtonTapped() {
-        
         emailTextField.resignFirstResponder()
         passwordTextField.resignFirstResponder()
         
@@ -119,6 +150,10 @@ class LoginViewController: UIViewController {
         loginButton.centerX(inView: scrollView)
         loginButton.anchor(top: stackView.bottomAnchor, paddingTop: 20)
         loginButton.setDimensions(height: 50, width: view.frame.width - 100)
+        
+        scrollView.addSubview(socialButtonStackView)
+        socialButtonStackView.centerX(inView: scrollView)
+        socialButtonStackView.anchor(top: loginButton.bottomAnchor, paddingTop: 30)
     }
     
     func presentLoginErrorAlert() {

@@ -9,7 +9,7 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Conversation View Controller-->
+        <!--채팅-->
         <scene sceneID="tne-QT-ifu">
             <objects>
                 <viewController id="BYZ-38-t0r" customClass="ConversationViewController" customModule="Messenger" customModuleProvider="target" sceneMemberID="viewController">
@@ -19,7 +19,7 @@
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
-                    <navigationItem key="navigationItem" id="faP-ki-JrN"/>
+                    <navigationItem key="navigationItem" title="채팅" id="faP-ki-JrN"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
@@ -43,13 +43,13 @@
             </objects>
             <point key="canvasLocation" x="321" y="-734"/>
         </scene>
-        <!--Item-->
+        <!--프로필-->
         <scene sceneID="wol-du-dJ4">
             <objects>
                 <navigationController id="PQu-j9-uyF" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Item" id="mpa-s4-vN7"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="Sbd-G6-2tj">
-                        <rect key="frame" x="0.0" y="59" width="393" height="44"/>
+                    <tabBarItem key="tabBarItem" title="프로필" id="mpa-s4-vN7"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" largeTitles="YES" id="Sbd-G6-2tj">
+                        <rect key="frame" x="0.0" y="59" width="393" height="96"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <connections>
@@ -60,30 +60,45 @@
             </objects>
             <point key="canvasLocation" x="1181" y="-35"/>
         </scene>
-        <!--View Controller-->
+        <!--프로필-->
         <scene sceneID="AHq-IB-8N4">
             <objects>
-                <viewController id="uyR-22-tfS" sceneMemberID="viewController">
+                <viewController id="uyR-22-tfS" customClass="ProfileViewController" customModule="Messenger" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="iUz-Oj-Vnh">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="69y-E5-J5B">
+                                <rect key="frame" x="0.0" y="155" width="393" height="614"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                            </tableView>
+                        </subviews>
                         <viewLayoutGuide key="safeArea" id="sag-cI-uc7"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="69y-E5-J5B" firstAttribute="leading" secondItem="sag-cI-uc7" secondAttribute="leading" id="0tk-zY-43X"/>
+                            <constraint firstItem="69y-E5-J5B" firstAttribute="top" secondItem="sag-cI-uc7" secondAttribute="top" id="N3s-lQ-v4h"/>
+                            <constraint firstItem="sag-cI-uc7" firstAttribute="trailing" secondItem="69y-E5-J5B" secondAttribute="trailing" id="R09-Te-MnR"/>
+                            <constraint firstItem="sag-cI-uc7" firstAttribute="bottom" secondItem="69y-E5-J5B" secondAttribute="bottom" id="dLf-3F-tih"/>
+                        </constraints>
                     </view>
-                    <navigationItem key="navigationItem" id="xed-3U-m16"/>
+                    <navigationItem key="navigationItem" title="프로필" id="xed-3U-m16"/>
+                    <connections>
+                        <outlet property="tableView" destination="69y-E5-J5B" id="lWd-Mb-b9f"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="pk9-Zd-WTz" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1181" y="682"/>
         </scene>
-        <!--Item-->
+        <!--채팅-->
         <scene sceneID="NGl-3s-71j">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="aTa-hG-sX0" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Item" id="1N1-Af-w5n"/>
+                    <tabBarItem key="tabBarItem" title="채팅" id="1N1-Af-w5n"/>
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="YdM-Dz-5fx">
-                        <rect key="frame" x="0.0" y="59" width="393" height="44"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" largeTitles="YES" id="YdM-Dz-5fx">
+                        <rect key="frame" x="0.0" y="59" width="393" height="96"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
