@@ -63,6 +63,11 @@ class RegisterViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
+        DispatchQueue.main.async { [weak self] in
+            self?.imageView.makeRounded()
+           
+        }
+        
         configureUI()
         nameTextField.delegate = self
         emailTextField.delegate = self
@@ -184,11 +189,7 @@ extension RegisterViewController: UIImagePickerControllerDelegate, UINavigationC
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         picker.dismiss(animated: true)
         let selectedImage = info[UIImagePickerController.InfoKey.editedImage] as? UIImage
-        DispatchQueue.main.async { [weak self] in
-            self?.imageView.makeRounded()
-            self?.imageView.image = selectedImage
-        }
-
+        imageView.image = selectedImage
     }
     
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
