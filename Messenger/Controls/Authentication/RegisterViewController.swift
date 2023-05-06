@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import FirebaseAuth
 
 class RegisterViewController: UIViewController {
     
@@ -19,7 +20,7 @@ class RegisterViewController: UIViewController {
     
     private let imageView: UIImageView = {
         let iv = UIImageView()
-        iv.image = UIImage(systemName: "person")
+        iv.image = UIImage(systemName: "person.circle")
         iv.tintColor = .gray
         iv.contentMode = .scaleAspectFit
         iv.clipsToBounds = true
@@ -63,10 +64,6 @@ class RegisterViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        DispatchQueue.main.async { [weak self] in
-            self?.imageView.makeRounded()
-           
-        }
         
         configureUI()
         nameTextField.delegate = self
@@ -86,6 +83,7 @@ class RegisterViewController: UIViewController {
     }
     
     @objc func registerButtonTapped() {
+        nameTextField.resignFirstResponder()
         emailTextField.resignFirstResponder()
         passwordTextField.resignFirstResponder()
         
@@ -93,12 +91,32 @@ class RegisterViewController: UIViewController {
               let email = emailTextField.text,
               let password = passwordTextField.text,
               !name.isEmpty, !email.isEmpty, !password.isEmpty, password.count >= 6 else {
-            presentLoginErrorAlert()
+            presentLoginErrorAlert(message: "정보를 모두 기입해주세요.")
             return
         }
         
-        // Firebase sign in
+        DatabaseManager.shared.checkIfUserExists(with: email) { [weak self] exist in
+            guard !exist else {
+                // 유저 이미 존재함 - 이메일 중복
+                self?.presentLoginErrorAlert(message: "이미 가입된 이메일 입니다.")
+                print("이미 가입된 이메일")
+                return
+            }
+            
+            // 회원가입
+            FirebaseAuth.Auth.auth().createUser(withEmail: email, password: password) { [weak self] result, error in
+                guard result != nil, error == nil else {
+                    print(error?.localizedDescription as Any)
+                    return
+                }
+                DatabaseManager.shared.insertUser(with: User(name: name,
+                                                             emailAddress: email))
+                self?.navigationController?.dismiss(animated: true)
+            }
+        }
     }
+    
+    
     
     // MARK: - Helpers
     
@@ -123,8 +141,8 @@ class RegisterViewController: UIViewController {
         registerButton.setDimensions(height: 50, width: view.frame.width - 100)
     }
     
-    func presentLoginErrorAlert() {
-        let alert = UIAlertController(title: "정보를 모두 기입해주세요.",
+    func presentLoginErrorAlert(message: String) {
+        let alert = UIAlertController(title: message,
                                       message: nil,
                                       preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "확인", style: .cancel))
@@ -189,7 +207,10 @@ extension RegisterViewController: UIImagePickerControllerDelegate, UINavigationC
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         picker.dismiss(animated: true)
         let selectedImage = info[UIImagePickerController.InfoKey.editedImage] as? UIImage
-        imageView.image = selectedImage
+        DispatchQueue.main.async { [weak self] in
+            self?.imageView.makeRounded()
+            self?.imageView.image = selectedImage
+        }
     }
     
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {

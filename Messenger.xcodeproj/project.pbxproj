@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		46FDA5E91BB8FB45FD6CD4EE /* Pods_Messenger.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 39686EDA363C1C557B13A254 /* Pods_Messenger.framework */; };
+		F13F50D52A05F8F500E22FC9 /* DatabaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F13F50D42A05F8F500E22FC9 /* DatabaseManager.swift */; };
+		F13F50D82A05FAAD00E22FC9 /* UserModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F13F50D72A05FAAD00E22FC9 /* UserModel.swift */; };
 		F1DECF732A04E8D5008DE277 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1DECF722A04E8D5008DE277 /* AppDelegate.swift */; };
 		F1DECF752A04E8D5008DE277 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1DECF742A04E8D5008DE277 /* SceneDelegate.swift */; };
 		F1DECF772A04E8D5008DE277 /* ConversationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1DECF762A04E8D5008DE277 /* ConversationViewController.swift */; };
@@ -32,6 +34,8 @@
 		39686EDA363C1C557B13A254 /* Pods_Messenger.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Messenger.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B8D6EE1E3513D9EAD6CAFA1 /* Pods-Messenger.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Messenger.release.xcconfig"; path = "Target Support Files/Pods-Messenger/Pods-Messenger.release.xcconfig"; sourceTree = "<group>"; };
 		E241AA4E72F669BB0543DA66 /* Pods-Messenger.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Messenger.debug.xcconfig"; path = "Target Support Files/Pods-Messenger/Pods-Messenger.debug.xcconfig"; sourceTree = "<group>"; };
+		F13F50D42A05F8F500E22FC9 /* DatabaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseManager.swift; sourceTree = "<group>"; };
+		F13F50D72A05FAAD00E22FC9 /* UserModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = UserModel.swift; path = Messenger/Utilities/UserModel.swift; sourceTree = SOURCE_ROOT; };
 		F1DECF6F2A04E8D5008DE277 /* Messenger.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Messenger.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F1DECF722A04E8D5008DE277 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F1DECF742A04E8D5008DE277 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -83,6 +87,14 @@
 			path = Pods;
 			sourceTree = "<group>";
 		};
+		F13F50D62A05F91300E22FC9 /* Service */ = {
+			isa = PBXGroup;
+			children = (
+				F13F50D42A05F8F500E22FC9 /* DatabaseManager.swift */,
+			);
+			name = Service;
+			sourceTree = "<group>";
+		};
 		F1DECF662A04E8D5008DE277 = {
 			isa = PBXGroup;
 			children = (
@@ -106,6 +118,7 @@
 			children = (
 				F1DECF722A04E8D5008DE277 /* AppDelegate.swift */,
 				F1DECF742A04E8D5008DE277 /* SceneDelegate.swift */,
+				F13F50D62A05F91300E22FC9 /* Service */,
 				F1DECF892A04F0D4008DE277 /* ViewModels */,
 				F1DECF882A04F0CB008DE277 /* Models */,
 				F1DECF872A04F0C5008DE277 /* Views */,
@@ -143,6 +156,7 @@
 		F1DECF882A04F0CB008DE277 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				F13F50D72A05FAAD00E22FC9 /* UserModel.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -317,6 +331,7 @@
 			files = (
 				F1DECF8D2A04F2AE008DE277 /* LoginViewController.swift in Sources */,
 				F1DECFA12A050383008DE277 /* AuthButton.swift in Sources */,
+				F13F50D52A05F8F500E22FC9 /* DatabaseManager.swift in Sources */,
 				F1DECF932A04F2F1008DE277 /* VideoPlayerViewController.swift in Sources */,
 				F1DECF952A04F322008DE277 /* NewConversationViewController.swift in Sources */,
 				F1DECF8F2A04F2C2008DE277 /* RegisterViewController.swift in Sources */,
@@ -324,6 +339,7 @@
 				F1DECF9A2A04F8AB008DE277 /* UIVIew+Extensions.swift in Sources */,
 				F1DECF732A04E8D5008DE277 /* AppDelegate.swift in Sources */,
 				F1DECFA42A052018008DE277 /* UIImageView+Extensions.swift in Sources */,
+				F13F50D82A05FAAD00E22FC9 /* UserModel.swift in Sources */,
 				F1DECF9F2A04FF2F008DE277 /* UIViewController+Extensions.swift in Sources */,
 				F1DECF972A04F32D008DE277 /* ProfileViewController.swift in Sources */,
 				F1DECF752A04E8D5008DE277 /* SceneDelegate.swift in Sources */,
