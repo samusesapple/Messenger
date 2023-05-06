@@ -53,6 +53,7 @@ class LoginViewController: UIViewController {
     }()
     
     private let facebookLoginButton: UIButton = {
+        //        let button = FBLoginButton(type: .custom)
         let button = UIButton(type: .system)
         button.setImage(UIImage(named: "facebook")?.withRenderingMode(.alwaysOriginal), for: .normal)
         button.setDimensions(height: 50, width: 50)
@@ -69,7 +70,7 @@ class LoginViewController: UIViewController {
     }()
     
     private lazy var socialButtonStackView: UIStackView = {
-       let stack = UIStackView(arrangedSubviews: [facebookLoginButton, googleLoginButton])
+        let stack = UIStackView(arrangedSubviews: [facebookLoginButton, googleLoginButton])
         stack.spacing = 30
         stack.distribution = .fillProportionally
         return stack
@@ -99,7 +100,19 @@ class LoginViewController: UIViewController {
     }
     
     @objc func handleFacebookLogin() {
-        print(#function)
+        let fbLoginManager = LoginManager()
+        fbLoginManager.logIn(permissions: ["email"], from: self) { (result, error) -> Void in
+            guard let result = result, error == nil else { return }
+            // if user cancel the login
+            if result.isCancelled {
+                print("로그인 취소")
+                return
+            }
+            if result.grantedPermissions.contains("email")
+            {
+                self.getFBUserData()
+            }
+        }
     }
     
     @objc func handleGoogleLogin() {
@@ -113,9 +126,9 @@ class LoginViewController: UIViewController {
         guard let email = emailTextField.text,
               let password = passwordTextField.text,
               !email.isEmpty, !password.isEmpty, password.count >= 6 else {
-                  presentLoginErrorAlert()
-                  return
-              }
+            presentLoginErrorAlert()
+            return
+        }
         
         // Firebase login
         FirebaseAuth.Auth.auth().signIn(withEmail: email, password: password) { [weak self] result, error in
@@ -164,6 +177,49 @@ class LoginViewController: UIViewController {
         present(alert, animated: true)
     }
     
+    func getFBUserData() {
+        guard let token = AccessToken.current?.tokenString as? String else { return }
+        // 토큰 사용해서 FB에 있는 유저 데이터 요청 만들기 (email, name)
+        let facebookRequest = FBSDKLoginKit.GraphRequest(graphPath: "me",
+                                                         parameters: ["fields": "email, name"],
+                                                         tokenString: token,
+                                                         version: nil,
+                                                         httpMethod: .get)
+        // 요청 시작
+        facebookRequest.start { _, result, error in
+            guard let result = result as? [String: Any?], error == nil else {
+                print("FB 그래프 요청 실패")
+                return
+            }
+            // 성공시, 이름과 이메일 String 형태로 받기
+            guard let userName = result["name"] as? String,
+                  let email = result["email"] as? String else {
+                print("FB로부터 유저 정보 가져오기 실패")
+                return
+            }
+            // Firebase에 FB로그인 한 유저 정보 없으면 저장
+            DatabaseManager.shared.checkIfUserExists(with: email) { exists in
+                if !exists {
+                    DatabaseManager.shared.insertUser(with: User(name: userName,
+                                                                 emailAddress: email))
+                }
+            }
+            
+            let credential = FacebookAuthProvider.credential(withAccessToken: token)
+            
+            FirebaseAuth.Auth.auth().signIn(with: credential) { [weak self] result, error in
+                guard result != nil, error == nil else {
+                    print("FB - CREDENTIAL LOGIN FAILLED")
+                    print(error?.localizedDescription)
+                    return
+                }
+                print("FB 로그인 성공")
+                self?.dismiss(animated: true)
+            }
+            
+            
+        }
+    }
 }
 
 // MARK: - UITextFieldDelegate

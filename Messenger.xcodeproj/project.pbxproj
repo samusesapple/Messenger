@@ -26,7 +26,6 @@
 		F1DECF9D2A04FD0B008DE277 /* AuthTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1DECF9C2A04FD0B008DE277 /* AuthTextField.swift */; };
 		F1DECF9F2A04FF2F008DE277 /* UIViewController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1DECF9E2A04FF2F008DE277 /* UIViewController+Extensions.swift */; };
 		F1DECFA12A050383008DE277 /* AuthButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1DECFA02A050383008DE277 /* AuthButton.swift */; };
-		F1DECFA42A052018008DE277 /* UIImageView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1DECFA32A052018008DE277 /* UIImageView+Extensions.swift */; };
 		F1DECFA62A05E809008DE277 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = F1DECFA52A05E809008DE277 /* GoogleService-Info.plist */; };
 /* End PBXBuildFile section */
 
@@ -54,7 +53,6 @@
 		F1DECF9C2A04FD0B008DE277 /* AuthTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthTextField.swift; sourceTree = "<group>"; };
 		F1DECF9E2A04FF2F008DE277 /* UIViewController+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extensions.swift"; sourceTree = "<group>"; };
 		F1DECFA02A050383008DE277 /* AuthButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthButton.swift; sourceTree = "<group>"; };
-		F1DECFA32A052018008DE277 /* UIImageView+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImageView+Extensions.swift"; sourceTree = "<group>"; };
 		F1DECFA52A05E809008DE277 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -199,7 +197,6 @@
 			children = (
 				F1DECF992A04F8AB008DE277 /* UIVIew+Extensions.swift */,
 				F1DECF9E2A04FF2F008DE277 /* UIViewController+Extensions.swift */,
-				F1DECFA32A052018008DE277 /* UIImageView+Extensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -338,7 +335,6 @@
 				F1DECF772A04E8D5008DE277 /* ConversationViewController.swift in Sources */,
 				F1DECF9A2A04F8AB008DE277 /* UIVIew+Extensions.swift in Sources */,
 				F1DECF732A04E8D5008DE277 /* AppDelegate.swift in Sources */,
-				F1DECFA42A052018008DE277 /* UIImageView+Extensions.swift in Sources */,
 				F13F50D82A05FAAD00E22FC9 /* UserModel.swift in Sources */,
 				F1DECF9F2A04FF2F008DE277 /* UIViewController+Extensions.swift in Sources */,
 				F1DECF972A04F32D008DE277 /* ProfileViewController.swift in Sources */,
@@ -420,7 +416,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -474,7 +470,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -495,6 +491,7 @@
 				DEVELOPMENT_TEAM = JY9QH7G8BB;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Messenger/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "\"\"";
 				INFOPLIST_KEY_NSCameraUsageDescription = "프로필 사진 촬영을 위한 카메라 접근을 허용하시겠습니까?";
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "프로필 사진 선택을 위한 갤러리 접근을 허용하시겠습니까?";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -530,6 +527,7 @@
 				DEVELOPMENT_TEAM = JY9QH7G8BB;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Messenger/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "\"\"";
 				INFOPLIST_KEY_NSCameraUsageDescription = "프로필 사진 촬영을 위한 카메라 접근을 허용하시겠습니까?";
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "프로필 사진 선택을 위한 갤러리 접근을 허용하시겠습니까?";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;

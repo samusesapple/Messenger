@@ -119,5 +119,11 @@ extension UIView {
         self.layer.addSublayer(shapeLayer)
     }
     
-    
+    func makeRounded() {
+        layer.borderWidth = 1
+        layer.masksToBounds = false
+        layer.borderColor = UIColor.lightGray.cgColor
+        layer.cornerRadius = self.frame.height / 2
+        clipsToBounds = true
+    }
 }
