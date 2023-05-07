@@ -10,6 +10,7 @@ import FirebaseCore
 import FirebaseAuth
 import FBSDKLoginKit
 import GoogleSignIn
+import JGProgressHUD
 
 class LoginViewController: UIViewController {
     
@@ -55,7 +56,6 @@ class LoginViewController: UIViewController {
     }()
     
     private let facebookLoginButton: UIButton = {
-        //        let button = FBLoginButton(type: .custom)
         let button = UIButton(type: .system)
         button.setImage(UIImage(named: "facebook")?.withRenderingMode(.alwaysOriginal), for: .normal)
         button.setDimensions(height: 50, width: 50)
@@ -77,6 +77,8 @@ class LoginViewController: UIViewController {
         stack.distribution = .fillProportionally
         return stack
     }()
+    
+    private let progressHUD = JGProgressHUD(style: .dark)
     
     // MARK: - Lifecycle
     
@@ -121,42 +123,70 @@ class LoginViewController: UIViewController {
         let clientID = FirebaseApp.app()?.options.clientID
         let config = GIDConfiguration(clientID: clientID!)
         GIDSignIn.sharedInstance.configuration = config
-        GIDSignIn.sharedInstance.signIn(withPresenting: self) { [unowned self] result, error in
-          guard error == nil else {
-              print(error?.localizedDescription as Any)
-              return
-          }
-          guard let user = result?.user,
-            let idToken = user.idToken?.tokenString
-          else {
-            // 토큰 오류
-              return
-          }
-          let credential = GoogleAuthProvider.credential(withIDToken: idToken,
-                                                         accessToken: user.accessToken.tokenString)
+        GIDSignIn.sharedInstance.signIn(withPresenting: self) { [weak self] result, error in
+            self?.progressHUD.show(in: self!.view)
+            guard error == nil else {
+                print(error?.localizedDescription as Any)
+                return
+            }
+            guard let user = result?.user,
+                  let idToken = user.idToken?.tokenString
+            else {
+                // 토큰 오류
+                return
+            }
+            let credential = GoogleAuthProvider.credential(withIDToken: idToken,
+                                                           accessToken: user.accessToken.tokenString)
             guard let email = user.profile?.email,
                   let userName = user.profile?.name else { return }
+            
             // 이미 존재하는 유저인지 확인
-            DatabaseManager.shared.checkIfUserExists(with: email) { exists in
+            let loggingUser = User(name: userName, emailAddress: email)
+            DatabaseManager.shared.checkIfUserExists(with: email) { [weak self] exists in
                 if !exists {
-                    DatabaseManager.shared.insertUser(with: User(name: userName,
-                                                                 emailAddress: email))
+                    // 유저 정보 저장 (completion block - 사진 firebase에 업로드)
+                    DatabaseManager.shared.createUser(with: loggingUser) { [weak self] success in
+                        if success {
+                            // 프로필 이미지 있으면 사진 받아서 firebase에 업로드
+                            if ((user.profile?.hasImage) != nil) {
+                                print("유저 프로필사진 받기 시작")
+                                guard let url = user.profile?.imageURL(withDimension: 200) else { print("유저사진 url 옵셔널 벗기기 실패"); return }
+                                URLSession.shared.dataTask(with: url) { data, response, error in
+                                    guard let data = data, error == nil else { print("유저사진 받기 실패"); return }
+                                    let filename = loggingUser.profilePictureFileName
+                                    StorageManager.shared.uploadProfilePicutre(with: data, fileName: filename) { result in
+                                        switch result {
+                                        case .success(let downloadURL):
+                                            UserDefaults.standard.set(downloadURL, forKey: "profile_picture_url")
+                                            print(downloadURL)
+                                            // 파일 저장 성공
+                                        case .failure(let error):
+                                            // 파일 저장 실패
+                                            print("Storage Manager 이미지 저장 실패")
+                                        }
+                                    }
+                                }.resume()
+
+                            }
+                            FirebaseAuth.Auth.auth().signIn(with: credential) { [weak self] result, error in
+                                guard result != nil, error == nil else {
+                                    print("GOOGLE - credential error")
+                                    print(error?.localizedDescription)
+                                    return
+                                }
+                                print("GOOGLE 로그인 성공")
+                                self?.dismiss(animated: true)
+                            }
+                        }
+                    }
                 }
-            }
-            // firebase login with goole id
-            FirebaseAuth.Auth.auth().signIn(with: credential) { [weak self] result, error in
-                guard result != nil, error == nil else {
-                    print("GOOGLE - credential error")
-                    print(error?.localizedDescription)
-                    return
-                }
-                print("GOOGLE 로그인 성공")
-                self?.dismiss(animated: true)
+                self?.progressHUD.dismiss()
             }
         }
     }
     
     @objc func loginButtonTapped() {
+        progressHUD.show(in: view)
         emailTextField.resignFirstResponder()
         passwordTextField.resignFirstResponder()
         
@@ -169,6 +199,9 @@ class LoginViewController: UIViewController {
         
         // Firebase login
         FirebaseAuth.Auth.auth().signIn(withEmail: email, password: password) { [weak self] result, error in
+            DispatchQueue.main.async { [weak self] in
+                self?.progressHUD.dismiss()
+            }
             guard let result = result, error == nil else {
                 print(error?.localizedDescription)
                 return
@@ -218,7 +251,7 @@ class LoginViewController: UIViewController {
         //        guard let token = AccessToken.current?.tokenString as? String else { return }
         // 토큰 사용해서 FB에 있는 유저 데이터 요청 만들기 (email, name)
         let facebookRequest = FBSDKLoginKit.GraphRequest(graphPath: "me",
-                                                         parameters: ["fields": "email, name"],
+                                                         parameters: ["fields": "email, name, picture"],
                                                          tokenString: token,
                                                          version: nil,
                                                          httpMethod: .get)
@@ -228,17 +261,44 @@ class LoginViewController: UIViewController {
                 print("FB 그래프 요청 실패")
                 return
             }
-            // 성공시, 이름과 이메일 String 형태로 받기
+
+            // 성공시, 이름과 이메일 String 형태로 받기 + 이미지 url 받기
             guard let userName = result["name"] as? String,
-                  let email = result["email"] as? String else {
+                  let email = result["email"] as? String,
+                  let image = result["picture"] as? [String: Any],
+                let data = image["data"] as? [String: Any],
+                  let pictureURL = data["url"] as? String else {
                 print("FB로부터 유저 정보 가져오기 실패")
                 return
             }
             // Firebase에 FB로그인 한 유저 정보 없으면 저장
+            let user = User(name: userName, emailAddress: email)
             DatabaseManager.shared.checkIfUserExists(with: email) { exists in
                 if !exists {
-                    DatabaseManager.shared.insertUser(with: User(name: userName,
-                                                                 emailAddress: email))
+                    DatabaseManager.shared.createUser(with: user) { success in
+                        if success {
+                            guard let url = URL(string: pictureURL) else { print("FB - url변환 실패"); return }
+                            
+                            // 받은 url로 이미지 데이터 다운로드하기
+                            URLSession.shared.dataTask(with: url) { data, response, error in
+                                guard let data = data, error == nil else { return }
+                                print("FB - 데이터 업로드 시작")
+                                let filename = user.profilePictureFileName
+                                StorageManager.shared.uploadProfilePicutre(with: data, fileName: filename) { result in
+                                    switch result {
+                                    case .success(let downloadURL):
+                                        UserDefaults.standard.set(downloadURL, forKey: "profile_picture_url")
+                                        print(downloadURL)
+                                        // 파일 저장 성공
+                                    case .failure(let error):
+                                        // 파일 저장 실패
+                                        print("Storage Manager 이미지 저장 실패")
+                                    }
+                                }
+                            }.resume()
+             
+                        }
+                    }
                 }
             }
             

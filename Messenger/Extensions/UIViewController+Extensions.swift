@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import JGProgressHUD
 
 extension UIViewController {
     func hideKeyboardWhenTappedAround() {

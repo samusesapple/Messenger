@@ -18,10 +18,10 @@ final class DatabaseManager {
     
 }
 
-// MARK: - Accaount Management
+// MARK: - Account Management
 extension DatabaseManager {
     /// check if user email already exists
-    public func checkIfUserExists(with email: String, completion: @escaping ((Bool) -> Void)) {
+    func checkIfUserExists(with email: String, completion: @escaping ((Bool) -> Void)) {
         let safeEmail = email.replacingOccurrences(of: ".", with: "-")
         
         database.child(safeEmail).observeSingleEvent(of: .value) { snapshot in
@@ -30,17 +30,23 @@ extension DatabaseManager {
                 completion(false)
                 return
             }
-           // 이미 존재하는 이메일
+            // 이미 존재하는 이메일
             completion(true)
         }
     }
     
     /// Inserts new user to Realtime Database
-    public func insertUser(with user: User) {
-        database.child(user.safeEmail).setValue([
-            "name": user.name,
-        ])
+    func createUser(with user: User, completion: @escaping (Bool) -> Void) {
+        database.child(user.safeEmail).setValue(["name": user.name,
+                                                 "email": user.emailAddress]) { error, ref in
+            guard error == nil else {
+                print("유저 데이터 firebase에 올리기 실패")
+                completion(false)
+                return
+            }
+        }
         print("회원가입 완료 - \(user.name)")
+        completion(true)
     }
 }
 

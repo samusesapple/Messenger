@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		46FDA5E91BB8FB45FD6CD4EE /* Pods_Messenger.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 39686EDA363C1C557B13A254 /* Pods_Messenger.framework */; };
+		F1053A2A2A075ADC00252D48 /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1053A292A075ADC00252D48 /* ChatViewController.swift */; };
+		F1053A2C2A075FD000252D48 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1053A2B2A075FD000252D48 /* Message.swift */; };
+		F1053A2E2A07682800252D48 /* StorageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1053A2D2A07682800252D48 /* StorageManager.swift */; };
 		F13F50D52A05F8F500E22FC9 /* DatabaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F13F50D42A05F8F500E22FC9 /* DatabaseManager.swift */; };
 		F13F50D82A05FAAD00E22FC9 /* UserModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F13F50D72A05FAAD00E22FC9 /* UserModel.swift */; };
 		F1DECF732A04E8D5008DE277 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1DECF722A04E8D5008DE277 /* AppDelegate.swift */; };
@@ -33,6 +36,9 @@
 		39686EDA363C1C557B13A254 /* Pods_Messenger.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Messenger.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B8D6EE1E3513D9EAD6CAFA1 /* Pods-Messenger.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Messenger.release.xcconfig"; path = "Target Support Files/Pods-Messenger/Pods-Messenger.release.xcconfig"; sourceTree = "<group>"; };
 		E241AA4E72F669BB0543DA66 /* Pods-Messenger.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Messenger.debug.xcconfig"; path = "Target Support Files/Pods-Messenger/Pods-Messenger.debug.xcconfig"; sourceTree = "<group>"; };
+		F1053A292A075ADC00252D48 /* ChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewController.swift; sourceTree = "<group>"; };
+		F1053A2B2A075FD000252D48 /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Message.swift; path = Messenger/Controls/Message.swift; sourceTree = SOURCE_ROOT; };
+		F1053A2D2A07682800252D48 /* StorageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageManager.swift; sourceTree = "<group>"; };
 		F13F50D42A05F8F500E22FC9 /* DatabaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseManager.swift; sourceTree = "<group>"; };
 		F13F50D72A05FAAD00E22FC9 /* UserModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = UserModel.swift; path = Messenger/Utilities/UserModel.swift; sourceTree = SOURCE_ROOT; };
 		F1DECF6F2A04E8D5008DE277 /* Messenger.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Messenger.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -89,6 +95,7 @@
 			isa = PBXGroup;
 			children = (
 				F13F50D42A05F8F500E22FC9 /* DatabaseManager.swift */,
+				F1053A2D2A07682800252D48 /* StorageManager.swift */,
 			);
 			name = Service;
 			sourceTree = "<group>";
@@ -135,6 +142,7 @@
 			children = (
 				F1DECF762A04E8D5008DE277 /* ConversationViewController.swift */,
 				F1DECF962A04F32D008DE277 /* ProfileViewController.swift */,
+				F1053A292A075ADC00252D48 /* ChatViewController.swift */,
 				F1DECF982A04F500008DE277 /* Authentication */,
 				F1DECF902A04F2E6008DE277 /* PhotoViewerViewController.swift */,
 				F1DECF922A04F2F1008DE277 /* VideoPlayerViewController.swift */,
@@ -155,6 +163,7 @@
 			isa = PBXGroup;
 			children = (
 				F13F50D72A05FAAD00E22FC9 /* UserModel.swift */,
+				F1053A2B2A075FD000252D48 /* Message.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -328,6 +337,9 @@
 			files = (
 				F1DECF8D2A04F2AE008DE277 /* LoginViewController.swift in Sources */,
 				F1DECFA12A050383008DE277 /* AuthButton.swift in Sources */,
+				F1053A2A2A075ADC00252D48 /* ChatViewController.swift in Sources */,
+				F1053A2E2A07682800252D48 /* StorageManager.swift in Sources */,
+				F1053A2C2A075FD000252D48 /* Message.swift in Sources */,
 				F13F50D52A05F8F500E22FC9 /* DatabaseManager.swift in Sources */,
 				F1DECF932A04F2F1008DE277 /* VideoPlayerViewController.swift in Sources */,
 				F1DECF952A04F322008DE277 /* NewConversationViewController.swift in Sources */,

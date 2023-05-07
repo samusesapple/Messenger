@@ -7,6 +7,7 @@
 
 import UIKit
 import FirebaseAuth
+import JGProgressHUD
 
 class RegisterViewController: UIViewController {
     
@@ -59,6 +60,8 @@ class RegisterViewController: UIViewController {
         return button
     }()
     
+    private let progressHUD = JGProgressHUD(style: .dark)
+    
     // MARK: - Lifecycle
     
     override func viewDidLoad() {
@@ -87,6 +90,8 @@ class RegisterViewController: UIViewController {
         emailTextField.resignFirstResponder()
         passwordTextField.resignFirstResponder()
         
+        progressHUD.show(in: view)
+
         guard let name = nameTextField.text,
               let email = emailTextField.text,
               let password = passwordTextField.text,
@@ -105,12 +110,33 @@ class RegisterViewController: UIViewController {
             
             // 회원가입
             FirebaseAuth.Auth.auth().createUser(withEmail: email, password: password) { [weak self] result, error in
-                guard result != nil, error == nil else {
+                DispatchQueue.main.async { [weak self] in
+                    self?.progressHUD.dismiss()
+                }
+                guard error == nil else {
                     print(error?.localizedDescription as Any)
                     return
                 }
-                DatabaseManager.shared.insertUser(with: User(name: name,
-                                                             emailAddress: email))
+                
+                let user = User(name: name, emailAddress: email)
+                DatabaseManager.shared.createUser(with: user) { success in
+                    if success {
+                        guard let image = self?.imageView.image,
+                                let data = image.pngData() else { return }
+                        let filename = user.profilePictureFileName
+                        StorageManager.shared.uploadProfilePicutre(with: data, fileName: filename) { result in
+                            switch result {
+                            case .success(let downloadURL):
+                                UserDefaults.standard.set(downloadURL, forKey: "profile_picture_url")
+                                print(downloadURL)
+                                // 파일 저장 성공
+                            case .failure(let error):
+                                // 파일 저장 실패
+                                print("Storage Manager 이미지 저장 실패")
+                            }
+                        }
+                    }
+                }
                 self?.navigationController?.dismiss(animated: true)
             }
         }

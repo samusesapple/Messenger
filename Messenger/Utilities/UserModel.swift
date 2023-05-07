@@ -10,10 +10,13 @@ import Foundation
 struct User {
     let name: String
     let emailAddress: String
-//    let profilePictureURL: String
     
     var safeEmail: String {
         let safeEmail = emailAddress.replacingOccurrences(of: ".", with: "-")
         return safeEmail
+    }
+    
+    var profilePictureFileName: String {
+        return "\(safeEmail)_profile_picture.png"
     }
 }
