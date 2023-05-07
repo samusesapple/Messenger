@@ -108,7 +108,7 @@ class LoginViewController: UIViewController {
             if result.isCancelled {
                 print("로그인 취소")
                 return
-            } 
+            }
             if result.grantedPermissions.contains("email")
             {
                 guard let token = result.token?.tokenString as? String else { return }
@@ -118,12 +118,25 @@ class LoginViewController: UIViewController {
     }
     
     @objc func handleGoogleLogin() {
-        let config = GIDConfiguration(clientID: "com.googleusercontent.apps.271630436451-5giplo60uak27oe2d0fsol8gi11gsivl")
-               GIDSignIn.sharedInstance.configuration = config
-                GIDSignIn.sharedInstance.signIn(withPresenting: self) { [weak self] user, error in
-                    if let error = error { print(error); return }
-                    // do something
-                }
+        let clientID = FirebaseApp.app()?.options.clientID
+        let config = GIDConfiguration(clientID: clientID!)
+        GIDSignIn.sharedInstance.configuration = config
+        GIDSignIn.sharedInstance.signIn(withPresenting: self) { [unowned self] result, error in
+          guard error == nil else {
+              print(error?.localizedDescription as Any)
+              return
+          }
+          guard let user = result?.user,
+            let idToken = user.idToken?.tokenString
+          else {
+            // 토큰 오류
+              return
+          }
+          let credential = GoogleAuthProvider.credential(withIDToken: idToken,
+                                                         accessToken: user.accessToken.tokenString)
+            print("google 로그인 완료")
+          // ...
+        }
     }
     
     @objc func loginButtonTapped() {
@@ -143,8 +156,8 @@ class LoginViewController: UIViewController {
                 print(error?.localizedDescription)
                 return
             }
-            let user = result.user
-            print("로그인 성공 - \(user)")
+            
+            print("로그인 성공 - \(result.user)")
             self?.navigationController?.dismiss(animated: true)
         }
     }
@@ -185,7 +198,7 @@ class LoginViewController: UIViewController {
     }
     
     func getFBUserData(with token: String) {
-//        guard let token = AccessToken.current?.tokenString as? String else { return }
+        //        guard let token = AccessToken.current?.tokenString as? String else { return }
         // 토큰 사용해서 FB에 있는 유저 데이터 요청 만들기 (email, name)
         let facebookRequest = FBSDKLoginKit.GraphRequest(graphPath: "me",
                                                          parameters: ["fields": "email, name"],
