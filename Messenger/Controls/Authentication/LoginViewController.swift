@@ -134,8 +134,25 @@ class LoginViewController: UIViewController {
           }
           let credential = GoogleAuthProvider.credential(withIDToken: idToken,
                                                          accessToken: user.accessToken.tokenString)
-            print("google 로그인 완료")
-          // ...
+            guard let email = user.profile?.email,
+                  let userName = user.profile?.name else { return }
+            // 이미 존재하는 유저인지 확인
+            DatabaseManager.shared.checkIfUserExists(with: email) { exists in
+                if !exists {
+                    DatabaseManager.shared.insertUser(with: User(name: userName,
+                                                                 emailAddress: email))
+                }
+            }
+            // firebase login with goole id
+            FirebaseAuth.Auth.auth().signIn(with: credential) { [weak self] result, error in
+                guard result != nil, error == nil else {
+                    print("GOOGLE - credential error")
+                    print(error?.localizedDescription)
+                    return
+                }
+                print("GOOGLE 로그인 성공")
+                self?.dismiss(animated: true)
+            }
         }
     }
     

@@ -8,6 +8,7 @@
 import UIKit
 import FirebaseAuth
 import FBSDKLoginKit
+import GoogleSignIn
 
 class ProfileViewController: UIViewController {
 
@@ -53,7 +54,11 @@ extension ProfileViewController: UITableViewDelegate, UITableViewDataSource {
                                       preferredStyle: .actionSheet)
         alert.addAction(UIAlertAction(title: "로그아웃",
                                       style: .destructive) { [weak self] _ in
+            // fb logout
             FBSDKLoginKit.LoginManager().logOut()
+            // google logout
+            GIDSignIn.sharedInstance.signOut()
+            
             do {
                 try FirebaseAuth.Auth.auth().signOut()
                 // 로그인 화면 다시 띄우기
