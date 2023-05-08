@@ -24,10 +24,10 @@ final class StorageManager {
     
     private let storage = Storage.storage().reference()
     
-    public typealias UploadPictureCompletion = (Result<String, Error>) -> Void
+    typealias UploadPictureCompletion = (Result<String, Error>) -> Void
     
     /// Upload picture to firebase storage  > returns completion with urlString to download
-    public func uploadProfilePicutre(with data: Data, fileName: String, completion: @escaping UploadPictureCompletion) {
+    func uploadProfilePicutre(with data: Data, fileName: String, completion: @escaping UploadPictureCompletion) {
         storage.child("images/\(fileName)").putData(data) { [weak self] metadata, error in
             guard error == nil else {
                 print("Firebase에 이미지 데이터 업로드 실패")
@@ -42,6 +42,18 @@ final class StorageManager {
                 let urlString = url.absoluteString
                 print("URL 다운로드 및 문자열 변환해서 Firebase에 저장 성공")
             }
+        }
+    }
+    
+    func downloadURL(for path: String, completion: @escaping (Result<URL, Error>) -> Void) {
+        let reference = storage.child(path)
+        print(#function)
+        reference.downloadURL { url, error in
+            guard let url = url, error == nil else {
+                completion(.failure(StorageErrors.failedDownloadingURL))
+                return
+            }
+            completion(.success(url))
         }
     }
 }

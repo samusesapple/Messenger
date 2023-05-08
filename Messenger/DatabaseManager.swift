@@ -14,6 +14,11 @@ final class DatabaseManager {
     
     private let database = Database.database().reference()
     
+    static func safeEmail(email: String) -> String {
+        let safeEmail = email.replacingOccurrences(of: ".", with: "-")
+        return safeEmail
+    }
+    
     private init() { }
     
 }
@@ -44,9 +49,35 @@ extension DatabaseManager {
                 completion(false)
                 return
             }
+            self.database.child("users").observeSingleEvent(of: .value) { snapshot in
+                if var usersCollection = snapshot.value as? [[String: String]] {
+                    let newUser: [String: String] = ["name": user.name, "email": user.safeEmail]
+                    usersCollection.append(newUser)
+                    self.database.child("users").setValue(usersCollection) { error, reference in
+                        guard error == nil else { return }
+                    }
+                    completion(true)
+                } else {
+                    // 유저 목록 담을 컬렉션 만들기
+                    let newUserCollection: [[String: String]] = [
+                        ["name": user.name, "email": user.safeEmail]
+                    ]
+                    self.database.child("users").setValue(newUserCollection) { error, reference in
+                        guard error == nil else { return }
+                    }
+                    completion(true)
+                    print("회원가입 완료 - \(user.name)")
+                }
+            }
+
         }
-        print("회원가입 완료 - \(user.name)")
-        completion(true)
+    }
+    
+    func getAllUsersFromFirebase(completion: @escaping (Result<[[String: String]], Error>) -> Void) {
+        database.child("users").observeSingleEvent(of: .value) { snapshot in
+            guard let value = snapshot.value as? [[String: String]] else { return }
+            completion(.success(value))
+        }
     }
 }
 

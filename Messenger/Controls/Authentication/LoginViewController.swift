@@ -124,11 +124,11 @@ class LoginViewController: UIViewController {
         let config = GIDConfiguration(clientID: clientID!)
         GIDSignIn.sharedInstance.configuration = config
         GIDSignIn.sharedInstance.signIn(withPresenting: self) { [weak self] result, error in
-            self?.progressHUD.show(in: self!.view)
             guard error == nil else {
                 print(error?.localizedDescription as Any)
                 return
             }
+            self?.progressHUD.show(in: self!.view)
             guard let user = result?.user,
                   let idToken = user.idToken?.tokenString
             else {
@@ -175,13 +175,15 @@ class LoginViewController: UIViewController {
                                     return
                                 }
                                 print("GOOGLE 로그인 성공")
+                                // 유저 이메일 캐싱하기
+                                UserDefaults.standard.set(email, forKey: "email")
                                 self?.dismiss(animated: true)
                             }
                         }
                     }
                 }
-                self?.progressHUD.dismiss()
             }
+            self?.progressHUD.dismiss()
         }
     }
     
@@ -206,7 +208,8 @@ class LoginViewController: UIViewController {
                 print(error?.localizedDescription)
                 return
             }
-            
+            // 유저 이메일 캐싱하기
+            UserDefaults.standard.set(email, forKey: "email")
             print("로그인 성공 - \(result.user)")
             self?.navigationController?.dismiss(animated: true)
         }
@@ -256,12 +259,13 @@ class LoginViewController: UIViewController {
                                                          version: nil,
                                                          httpMethod: .get)
         // 요청 시작
-        facebookRequest.start { _, result, error in
+        facebookRequest.start { [weak self] _, result, error in
             guard let result = result as? [String: Any?], error == nil else {
                 print("FB 그래프 요청 실패")
                 return
             }
-
+            
+            self?.progressHUD.show(in: self!.view)
             // 성공시, 이름과 이메일 String 형태로 받기 + 이미지 url 받기
             guard let userName = result["name"] as? String,
                   let email = result["email"] as? String,
@@ -311,7 +315,9 @@ class LoginViewController: UIViewController {
                     return
                 }
                 print("FB 로그인 성공")
+                UserDefaults.standard.set(email, forKey: "email")
                 self?.dismiss(animated: true)
+                self?.progressHUD.dismiss()
             }
             
             
