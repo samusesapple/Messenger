@@ -12,11 +12,11 @@
 		F1053A2C2A075FD000252D48 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1053A2B2A075FD000252D48 /* Message.swift */; };
 		F1053A2E2A07682800252D48 /* StorageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1053A2D2A07682800252D48 /* StorageManager.swift */; };
 		F1053A302A0792EC00252D48 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = F1053A2F2A0792EC00252D48 /* GoogleService-Info.plist */; };
-		F13F50D52A05F8F500E22FC9 /* DatabaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F13F50D42A05F8F500E22FC9 /* DatabaseManager.swift */; };
 		F13F50D82A05FAAD00E22FC9 /* UserModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F13F50D72A05FAAD00E22FC9 /* UserModel.swift */; };
 		F16AE4F02A0CF52E0077DB1A /* Constant.swift in Sources */ = {isa = PBXBuildFile; fileRef = F16AE4EF2A0CF52E0077DB1A /* Constant.swift */; };
-		F19091FE2A08805400F804F4 /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F19091FD2A08805400F804F4 /* LoginViewModel.swift */; };
-		F19092002A08806500F804F4 /* CoversationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F19091FF2A08806500F804F4 /* CoversationViewModel.swift */; };
+		F16D9D682A0D06FF00F277D9 /* FirestoreManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F16D9D672A0D06FF00F277D9 /* FirestoreManager.swift */; };
+		F19091FE2A08805400F804F4 /* AuthViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F19091FD2A08805400F804F4 /* AuthViewModel.swift */; };
+		F19092002A08806500F804F4 /* ProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F19091FF2A08806500F804F4 /* ProfileViewModel.swift */; };
 		F1DECF732A04E8D5008DE277 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1DECF722A04E8D5008DE277 /* AppDelegate.swift */; };
 		F1DECF752A04E8D5008DE277 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1DECF742A04E8D5008DE277 /* SceneDelegate.swift */; };
 		F1DECF772A04E8D5008DE277 /* ConversationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1DECF762A04E8D5008DE277 /* ConversationViewController.swift */; };
@@ -43,12 +43,12 @@
 		F1053A2B2A075FD000252D48 /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Message.swift; path = Messenger/Models/Message.swift; sourceTree = SOURCE_ROOT; };
 		F1053A2D2A07682800252D48 /* StorageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageManager.swift; sourceTree = "<group>"; };
 		F1053A2F2A0792EC00252D48 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "GoogleService-Info.plist"; sourceTree = SOURCE_ROOT; };
-		F13F50D42A05F8F500E22FC9 /* DatabaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseManager.swift; sourceTree = "<group>"; };
 		F13F50D72A05FAAD00E22FC9 /* UserModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = UserModel.swift; path = Messenger/Models/UserModel.swift; sourceTree = SOURCE_ROOT; };
 		F15C73102A0B7C7500379520 /* Messenger.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Messenger.entitlements; sourceTree = "<group>"; };
 		F16AE4EF2A0CF52E0077DB1A /* Constant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constant.swift; sourceTree = "<group>"; };
-		F19091FD2A08805400F804F4 /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
-		F19091FF2A08806500F804F4 /* CoversationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoversationViewModel.swift; sourceTree = "<group>"; };
+		F16D9D672A0D06FF00F277D9 /* FirestoreManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirestoreManager.swift; sourceTree = "<group>"; };
+		F19091FD2A08805400F804F4 /* AuthViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewModel.swift; sourceTree = "<group>"; };
+		F19091FF2A08806500F804F4 /* ProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewModel.swift; sourceTree = "<group>"; };
 		F1DECF6F2A04E8D5008DE277 /* Messenger.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Messenger.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F1DECF722A04E8D5008DE277 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F1DECF742A04E8D5008DE277 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -101,7 +101,7 @@
 		F13F50D62A05F91300E22FC9 /* Service */ = {
 			isa = PBXGroup;
 			children = (
-				F13F50D42A05F8F500E22FC9 /* DatabaseManager.swift */,
+				F16D9D672A0D06FF00F277D9 /* FirestoreManager.swift */,
 				F1053A2D2A07682800252D48 /* StorageManager.swift */,
 			);
 			name = Service;
@@ -119,8 +119,8 @@
 		F19091FC2A08803500F804F4 /* ViewModels */ = {
 			isa = PBXGroup;
 			children = (
-				F19091FD2A08805400F804F4 /* LoginViewModel.swift */,
-				F19091FF2A08806500F804F4 /* CoversationViewModel.swift */,
+				F19091FD2A08805400F804F4 /* AuthViewModel.swift */,
+				F19091FF2A08806500F804F4 /* ProfileViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -348,11 +348,11 @@
 			files = (
 				F1DECF8D2A04F2AE008DE277 /* LoginViewController.swift in Sources */,
 				F1DECFA12A050383008DE277 /* AuthButton.swift in Sources */,
-				F19092002A08806500F804F4 /* CoversationViewModel.swift in Sources */,
+				F19092002A08806500F804F4 /* ProfileViewModel.swift in Sources */,
 				F1053A2A2A075ADC00252D48 /* ChatViewController.swift in Sources */,
 				F1053A2E2A07682800252D48 /* StorageManager.swift in Sources */,
+				F16D9D682A0D06FF00F277D9 /* FirestoreManager.swift in Sources */,
 				F1053A2C2A075FD000252D48 /* Message.swift in Sources */,
-				F13F50D52A05F8F500E22FC9 /* DatabaseManager.swift in Sources */,
 				F1DECF932A04F2F1008DE277 /* VideoPlayerViewController.swift in Sources */,
 				F1DECF952A04F322008DE277 /* NewConversationViewController.swift in Sources */,
 				F1DECF8F2A04F2C2008DE277 /* RegisterViewController.swift in Sources */,
@@ -365,7 +365,7 @@
 				F1DECF972A04F32D008DE277 /* ProfileViewController.swift in Sources */,
 				F1DECF752A04E8D5008DE277 /* SceneDelegate.swift in Sources */,
 				F1DECF912A04F2E6008DE277 /* PhotoViewerViewController.swift in Sources */,
-				F19091FE2A08805400F804F4 /* LoginViewModel.swift in Sources */,
+				F19091FE2A08805400F804F4 /* AuthViewModel.swift in Sources */,
 				F1DECF9D2A04FD0B008DE277 /* AuthTextField.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -12,6 +12,7 @@ import JGProgressHUD
 class RegisterViewController: UIViewController {
     
     // MARK: - Properties
+    private var viewModel = AuthViewModel()
     
     private let scrollView: UIScrollView = {
         let sv = UIScrollView()
@@ -90,8 +91,6 @@ class RegisterViewController: UIViewController {
         emailTextField.resignFirstResponder()
         passwordTextField.resignFirstResponder()
         
-        progressHUD.show(in: view)
-
         guard let name = nameTextField.text,
               let email = emailTextField.text,
               let password = passwordTextField.text,
@@ -99,47 +98,15 @@ class RegisterViewController: UIViewController {
             presentLoginErrorAlert(message: "정보를 모두 기입해주세요.")
             return
         }
+        progressHUD.show(in: view)
         
-        DatabaseManager.shared.checkIfUserExists(with: email) { [weak self] exist in
-            guard !exist else {
-                // 유저 이미 존재함 - 이메일 중복
-                self?.presentLoginErrorAlert(message: "이미 가입된 이메일 입니다.")
-                print("이미 가입된 이메일")
-                return
-            }
-            
-            // 회원가입
-            FirebaseAuth.Auth.auth().createUser(withEmail: email, password: password) { [weak self] result, error in
-                DispatchQueue.main.async { [weak self] in
-                    self?.progressHUD.dismiss()
-                }
-                guard error == nil else {
-                    print(error?.localizedDescription as Any)
-                    return
-                }
-                
-                let user = User(name: name, emailAddress: email)
-                DatabaseManager.shared.createUser(with: user) { success in
-                    if success {
-                        guard let image = self?.imageView.image,
-                                let data = image.pngData() else { return }
-                        let filename = user.profilePictureFileName
-                        StorageManager.shared.uploadProfilePicutre(with: data, fileName: filename) { result in
-                            switch result {
-                            case .success(let downloadURL):
-                                UserDefaults.standard.set(downloadURL, forKey: "profile_picture_url")
-                                print(downloadURL)
-                                // 파일 저장 성공
-                            case .failure(_):
-                                // 파일 저장 실패
-                                print("Storage Manager 이미지 저장 실패")
-                            }
-                        }
-                    }
-                }
-                self?.navigationController?.dismiss(animated: true)
-            }
+        viewModel.registerUser(credentials: AuthCredentials(email: email,
+                                                                   fullName: name,
+                                                                   password: password)) {[weak self] in
+            self?.navigationController?.dismiss(animated: true)
+            self?.progressHUD.dismiss()
         }
+        
     }
     
     

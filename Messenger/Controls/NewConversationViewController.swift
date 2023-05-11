@@ -99,29 +99,29 @@ extension NewConversationViewController: UISearchBarDelegate {
         guard let text = searchBar.text, !text.replacingOccurrences(of: " ", with: " ").isEmpty else { return }
         results.removeAll()
         progressHUD.show(in: view)
-        self.searchUsers(with: text)
+//        self.searchUsers(with: text)
     }
     
-    func searchUsers(with text: String) {
-        // firebase에 결과 있는지 검색
-        if hasFetched {
-            // 결과 있으면 - 결과 보여주기
-            filterUsers(with: text)
-        } else {
-            // 결과 없으면 - 결과없으면, 데이터 가져오고 결과없음 라벨 띄우기
-            DatabaseManager.shared.getAllUsersFromFirebase { [weak self] result in
-                switch result {
-                case .success(let usersCollection):
-                    self?.hasFetched = true
-                    self?.users = usersCollection
-                    self?.filterUsers(with: text)
-                case .failure(let error):
-                    print("유저 목록 가져오기 실패 \(error)")
-                }
-            }
-        }
-
-    }
+//    func searchUsers(with text: String) {
+//        // firebase에 결과 있는지 검색
+//        if hasFetched {
+//            // 결과 있으면 - 결과 보여주기
+//            filterUsers(with: text)
+//        } else {
+//            // 결과 없으면 - 결과없으면, 데이터 가져오고 결과없음 라벨 띄우기
+//            DatabaseManager.shared.getAllUsersFromFirebase { [weak self] result in
+//                switch result {
+//                case .success(let usersCollection):
+//                    self?.hasFetched = true
+//                    self?.users = usersCollection
+//                    self?.filterUsers(with: text)
+//                case .failure(let error):
+//                    print("유저 목록 가져오기 실패 \(error)")
+//                }
+//            }
+//        }
+//
+//    }
     func filterUsers(with text: String) {
         guard hasFetched else {
             return
