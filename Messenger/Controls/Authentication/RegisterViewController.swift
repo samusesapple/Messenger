@@ -130,7 +130,7 @@ class RegisterViewController: UIViewController {
                                 UserDefaults.standard.set(downloadURL, forKey: "profile_picture_url")
                                 print(downloadURL)
                                 // 파일 저장 성공
-                            case .failure(let error):
+                            case .failure(_):
                                 // 파일 저장 실패
                                 print("Storage Manager 이미지 저장 실패")
                             }

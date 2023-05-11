@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import AuthenticationServices
 import FirebaseCore
 import FirebaseAuth
 import FBSDKLoginKit
@@ -71,9 +72,17 @@ class LoginViewController: UIViewController {
         return button
     }()
     
+    private let appleLoginButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setImage(UIImage(named: "apple")?.withRenderingMode(.alwaysOriginal), for: .normal)
+        button.setDimensions(height: 50, width: 50)
+        button.addTarget(self, action: #selector(handleAppleLogin), for: .touchUpInside)
+        return button
+    }()
+    
     private lazy var socialButtonStackView: UIStackView = {
-        let stack = UIStackView(arrangedSubviews: [facebookLoginButton, googleLoginButton])
-        stack.spacing = 30
+        let stack = UIStackView(arrangedSubviews: [facebookLoginButton, googleLoginButton, appleLoginButton])
+        stack.spacing = 35
         stack.distribution = .fillProportionally
         return stack
     }()
@@ -185,6 +194,10 @@ class LoginViewController: UIViewController {
             }
             self?.progressHUD.dismiss()
         }
+    }
+    
+    @objc func handleAppleLogin() {
+        requestAppleLogin()
     }
     
     @objc func loginButtonTapped() {
@@ -336,6 +349,61 @@ extension LoginViewController: UITextFieldDelegate {
             loginButtonTapped()
         }
         return true
+    }
+    
+}
+
+// MARK: - ASAuthorizationControllerDelegate
+
+extension LoginViewController: ASAuthorizationControllerDelegate {
+    // 성공한 경우 동작하는 코드
+        func authorizationController(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
+            guard let appleCredential = authorization.credential as? ASAuthorizationAppleIDCredential else { return }
+            guard let email = appleCredential.email,
+                  let userName = appleCredential.fullName?.givenName
+                else {
+                return
+            }
+            
+            let credential = authorization.credential as! AuthCredential
+            
+            let loggingUser = User(name: userName, emailAddress: email)
+            DatabaseManager.shared.checkIfUserExists(with: email) { [weak self] exists in
+                if !exists {
+                    // 유저 정보 저장 (completion block - 사진 firebase에 업로드)
+                    DatabaseManager.shared.createUser(with: loggingUser) { [weak self] success in
+                        if success {
+                            FirebaseAuth.Auth.auth().signIn(with: credential) { [weak self] result, error in
+                                guard result != nil, error == nil else {
+                                    print("APPLE - credential error")
+                                    print(error?.localizedDescription)
+                                    return
+                                }
+                                print("APPLE 로그인 성공")
+                                // 유저 이메일 캐싱하기
+                                UserDefaults.standard.set(email, forKey: "email")
+                                self?.dismiss(animated: true)
+                            }
+                        }
+                    }
+                }
+            }
+            progressHUD.dismiss()
+        }
+        
+        // 실패한 경우 동작하는 코드
+        func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: Error) {
+            print(error.localizedDescription)
+            print("애플 로그인 실패")
+        }
+    
+    func requestAppleLogin() {
+        let request = ASAuthorizationAppleIDProvider().createRequest()
+                request.requestedScopes = [.fullName, .email]
+        let appleAuthController = ASAuthorizationController(authorizationRequests: [request])
+        appleAuthController.delegate = self
+        appleAuthController.presentationContextProvider = self as? ASAuthorizationControllerPresentationContextProviding
+        appleAuthController.performRequests()
     }
     
 }
