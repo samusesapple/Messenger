@@ -16,8 +16,9 @@
 ### 사용 기술
 ---
 - Firebase (Storage, Realtime Database, Auth, Firestore)
-- URLSession
+- UserDefaults
 - MVVM
+- URLSession
 - GoogleSignIn, FBSDKLoginKit
 - MessageKit
 - JGProgressHUD
