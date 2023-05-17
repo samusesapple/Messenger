@@ -7,7 +7,6 @@
 
 import UIKit
 import AuthenticationServices
-import FirebaseCore
 import FirebaseAuth
 import FBSDKLoginKit
 import GoogleSignIn
@@ -17,6 +16,8 @@ class LoginViewController: UIViewController {
     
     // MARK: - Properties
     private var viewModel = AuthViewModel()
+    
+    private let progressHUD = JGProgressHUD(style: .dark)
     
     private let scrollView: UIScrollView = {
         let sv = UIScrollView()
@@ -88,8 +89,6 @@ class LoginViewController: UIViewController {
         return stack
     }()
     
-    private let progressHUD = JGProgressHUD(style: .dark)
-    
     // MARK: - Lifecycle
     
     override func viewDidLoad() {
@@ -115,17 +114,17 @@ class LoginViewController: UIViewController {
     
     @objc func handleFacebookLogin() {
         progressHUD.show(in: view)
-        viewModel.handleFBLogin(controller: self) { [weak self] in 
+        viewModel.handleFBLogin(controller: self) { [weak self] result in
             self?.progressHUD.dismiss()
-            self?.dismiss(animated: true)
+            if result {self?.dismiss(animated: true)}
         }
     }
     
     @objc func handleGoogleLogin() {
         progressHUD.show(in: view)
-        viewModel.handleGoogleLogin(controller: self) { [weak self] in
+        viewModel.handleGoogleLogin(controller: self) { [weak self] result in
             self?.progressHUD.dismiss()
-            self?.dismiss(animated: true)
+            if result {self?.dismiss(animated: true)}
         }
     }
     
@@ -140,14 +139,19 @@ class LoginViewController: UIViewController {
         guard let email = emailTextField.text,
               let password = passwordTextField.text,
               !email.isEmpty, !password.isEmpty, password.count >= 6 else {
-            presentLoginErrorAlert()
+            presentLoginErrorAlert(error: "정보를 모두 입력해주세요.")
             return
         }
         progressHUD.show(in: view, animated: true)
         // Firebase login
-        viewModel.handleUserLogin(email: email, password: password) { [weak self] in
-            self?.progressHUD.dismiss()
-            self?.navigationController?.dismiss(animated: true)
+        viewModel.handleUserLogin(email: email, password: password) { [weak self] success in
+            if !success {
+                self?.progressHUD.dismiss()
+                self?.presentLoginErrorAlert(error: "잘못된 정보 입니다.")
+            } else {
+                self?.progressHUD.dismiss()
+                self?.navigationController?.dismiss(animated: true)
+            }
         }
     }
     
@@ -178,8 +182,8 @@ class LoginViewController: UIViewController {
         socialButtonStackView.anchor(top: loginButton.bottomAnchor, paddingTop: 30)
     }
     
-    func presentLoginErrorAlert() {
-        let alert = UIAlertController(title: "정보를 모두 기입해주세요.",
+    func presentLoginErrorAlert(error message: String) {
+        let alert = UIAlertController(title: message,
                                       message: nil,
                                       preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "확인", style: .cancel))
@@ -210,13 +214,13 @@ extension LoginViewController: ASAuthorizationControllerDelegate {
         guard let appleCredential = authorization.credential as? ASAuthorizationAppleIDCredential else { return }
         guard let email = appleCredential.email,
               let userName = appleCredential.fullName?.givenName
+//              let uid = appleCredentia
         else {
             return
         }
-        
         let credential = authorization.credential as! AuthCredential
         
-        let loggingUser = User(name: userName, emailAddress: email)
+//        let loggingUser = User(name: userName, emailAddress: email)
     }
     
     

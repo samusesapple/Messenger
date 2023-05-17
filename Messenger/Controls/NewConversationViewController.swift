@@ -8,15 +8,16 @@
 import UIKit
 import JGProgressHUD
 
+protocol NewConversationViewControllerDelegate: AnyObject {
+    func needToSetNewConversation(with newUser: User, controller: NewConversationViewController)
+}
+
 class NewConversationViewController: UIViewController {
     
     // MARK: - Properties
     
-    private var users = [[String: String]]()
-    
-    private var results = [[String: String]]()
-    
-    private var hasFetched = false
+    private var viewModel = NewConversationViewModel()
+    weak var delegate: NewConversationViewControllerDelegate?
     
     private let progressHUD = JGProgressHUD(style: .dark)
 
@@ -35,9 +36,10 @@ class NewConversationViewController: UIViewController {
     
     private let emptyResultsLabel: UILabel = {
        let label = UILabel()
+        label.isHidden = true
         label.text = "검색 결과 없음"
         label.textAlignment = .center
-        label.textColor = .green
+        label.textColor = .blue
         label.font = .systemFont(ofSize: 21, weight: .bold)
         return label
     }()
@@ -75,18 +77,21 @@ class NewConversationViewController: UIViewController {
 // MARK: - UITableViewDelegate
 extension NewConversationViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return results.count
+        return viewModel.results.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-        cell.textLabel?.text = results[indexPath.row]["name"]
+        cell.textLabel?.text = viewModel.results[indexPath.row].name
         cell.tintColor = .black
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+        // 선택된 유저와 대화 시작해야함
+        let targetUserData = viewModel.results[indexPath.row]
+        delegate?.needToSetNewConversation(with: targetUserData, controller: self)
     }
     
 }
@@ -97,53 +102,22 @@ extension NewConversationViewController: UISearchBarDelegate {
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         guard let text = searchBar.text, !text.replacingOccurrences(of: " ", with: " ").isEmpty else { return }
-        results.removeAll()
+        viewModel.results = []
         progressHUD.show(in: view)
-//        self.searchUsers(with: text)
-    }
-    
-//    func searchUsers(with text: String) {
-//        // firebase에 결과 있는지 검색
-//        if hasFetched {
-//            // 결과 있으면 - 결과 보여주기
-//            filterUsers(with: text)
-//        } else {
-//            // 결과 없으면 - 결과없으면, 데이터 가져오고 결과없음 라벨 띄우기
-//            DatabaseManager.shared.getAllUsersFromFirebase { [weak self] result in
-//                switch result {
-//                case .success(let usersCollection):
-//                    self?.hasFetched = true
-//                    self?.users = usersCollection
-//                    self?.filterUsers(with: text)
-//                case .failure(let error):
-//                    print("유저 목록 가져오기 실패 \(error)")
-//                }
-//            }
-//        }
-//
-//    }
-    func filterUsers(with text: String) {
-        guard hasFetched else {
-            return
+        viewModel.searchUsers(with: text) { [weak self] in
+            self?.progressHUD.dismiss()
+            self?.updateUI()
         }
-        
-        self.progressHUD.dismiss()
-        
-        var results: [[String: String]] = self.users.filter {
-            guard let name = $0["name"]?.lowercased() else { return false }
-            return name.hasPrefix(text.lowercased())
-        }
-        self.results = results
-        updateUI()
     }
-    
+
     func updateUI() {
-        if results.isEmpty {
+        if viewModel.results.isEmpty {
             self.emptyResultsLabel.isHidden = false
             self.tableView.isHidden = true
         } else {
             self.emptyResultsLabel.isHidden = true
             self.tableView.isHidden = false
+            tableView.reloadData()
         }
     }
     

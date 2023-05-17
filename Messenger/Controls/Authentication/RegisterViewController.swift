@@ -100,11 +100,12 @@ class RegisterViewController: UIViewController {
         }
         progressHUD.show(in: view)
         
-        viewModel.registerUser(credentials: AuthCredentials(email: email,
-                                                                   fullName: name,
-                                                                   password: password)) {[weak self] in
+        viewModel.registerUser(imageView: imageView, credentials: AuthCredentials(email: email,
+                                                            fullName: name,
+                                                            password: password)) {[weak self] in
             self?.navigationController?.dismiss(animated: true)
             self?.progressHUD.dismiss()
+            self?.presentLoginErrorAlert(message: "이미 존재하는 이메일 입니다.")
         }
         
     }
