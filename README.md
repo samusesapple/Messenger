@@ -36,8 +36,11 @@
 
 ### 시연 영상
 ---
-> 실시간 채팅 기능 및 사진 전송 기능
-![image](https://github.com/samusesapple/Messenger/assets/126672733/3eb37bd9-6db3-4ad4-a743-672ad17a90c7)
+* 실시간 채팅 및 사진 전송 기능 <br>
+![캡처12](https://github.com/samusesapple/Messenger/assets/126672733/3243c92f-9bf5-47f1-92c9-7da2e98bebc0)
+
+
+
 
 
 
