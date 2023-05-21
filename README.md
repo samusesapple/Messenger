@@ -21,3 +21,14 @@
 * URLSession 
 * MessageKit
 * JGProgressHUD
+<br>
+<br>
+
+### 문제 해결 과정
+---
+1. 로그아웃 후, 다시 소셜 로그인을 하면 기존에 존재하던 유저의 Real time data가 초기화 되는 문제 <br>
+<br>
+
+> Auth ViewModel - Google login 코드
+<img width="778" alt="image" src="https://github.com/samusesapple/Messenger/assets/126672733/baa4a766-bd29-46b1-abc8-1559e711cc1e">
+
