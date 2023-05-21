@@ -30,7 +30,7 @@ class NewConversationViewController: UIViewController {
     private let tableView: UITableView = {
        let tv = UITableView()
         tv.isHidden = true
-        tv.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+        tv.register(NewConversationUserTableViewCell.self, forCellReuseIdentifier: NewConversationUserTableViewCell.identifier)
         return tv
     }()
     
@@ -81,9 +81,9 @@ extension NewConversationViewController: UITableViewDelegate, UITableViewDataSou
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-        cell.textLabel?.text = viewModel.results[indexPath.row].name
-        cell.tintColor = .black
+        let cell = tableView.dequeueReusableCell(withIdentifier: NewConversationUserTableViewCell.identifier, for: indexPath) as! NewConversationUserTableViewCell
+        cell.viewModel = NewConversationCellViewModel(name: viewModel.results[indexPath.row].name,
+                                                      email: viewModel.results[indexPath.row].emailAddress)
         return cell
     }
     
@@ -94,6 +94,9 @@ extension NewConversationViewController: UITableViewDelegate, UITableViewDataSou
         delegate?.needToSetNewConversation(with: targetUserData, controller: self)
     }
     
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 90
+    }
 }
 
 // MARK: - UISearchBarDelegate

@@ -48,9 +48,11 @@ class ConversationViewController: UIViewController {
         view.addSubview(tableView)
         view.addSubview(noConversationLabel)
         setTableView()
-        fetchConversatons()
         viewModel.startListeningForConversations { [weak self] in
+            print("reload TableView Data")
+            self?.fetchConversatons()
             self?.tableView.reloadData()
+            
         }
     }
     

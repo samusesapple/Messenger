@@ -8,6 +8,8 @@
 import UIKit
 import MessageKit
 import InputBarAccessoryView
+import AVFoundation
+import AVKit
 
 protocol ChatViewControllerDelegate: AnyObject {
     func needToUpdateCoversationList()
@@ -64,17 +66,18 @@ class ChatViewController: MessagesViewController {
         actionSheet.addAction(UIAlertAction(title: "사진",
                                             style: .default,
                                             handler: { [weak self] action in
-            self?.presentPhotoInputSheet()
+            self?.presentPhotoInputActionSheet()
         }))
         actionSheet.addAction(UIAlertAction(title: "동영상",
                                             style: .default,
                                             handler: { [weak self] action in
+            self?.presentVideoInputActionSheet()
             print("동영상")
         }))
         actionSheet.addAction(UIAlertAction(title: "음성",
                                             style: .default,
                                             handler: { [weak self] action in
-            print("동영상")
+            print("음성")
         }))
         actionSheet.addAction(UIAlertAction(title: "취소",
                                             style: .cancel))
@@ -82,7 +85,7 @@ class ChatViewController: MessagesViewController {
         present(actionSheet, animated: true)
     }
     
-    private func presentPhotoInputSheet() {
+    private func presentPhotoInputActionSheet() {
         let actionSheet = UIAlertController(title: "사진",
                                             message: nil,
                                             preferredStyle: .actionSheet)
@@ -101,6 +104,38 @@ class ChatViewController: MessagesViewController {
             let picker = UIImagePickerController()
             picker.sourceType = .photoLibrary
             picker.delegate = self
+            picker.allowsEditing = true
+            self?.present(picker, animated: true)
+        }))
+        actionSheet.addAction(UIAlertAction(title: "취소",
+                                            style: .cancel))
+        
+        present(actionSheet, animated: true)
+    }
+    
+    private func presentVideoInputActionSheet() {
+        let actionSheet = UIAlertController(title: "동영상",
+                                            message: nil,
+                                            preferredStyle: .actionSheet)
+        actionSheet.addAction(UIAlertAction(title: "카메라",
+                                            style: .default,
+                                            handler: { [weak self] action in
+            let picker = UIImagePickerController()
+            picker.sourceType = .camera
+            picker.delegate = self
+            picker.mediaTypes = ["public.movie"]
+            picker.videoQuality = .typeMedium
+            picker.allowsEditing = true
+            self?.present(picker, animated: true)
+        }))
+        actionSheet.addAction(UIAlertAction(title: "앨범",
+                                            style: .default,
+                                            handler: { [weak self] action in
+            let picker = UIImagePickerController()
+            picker.sourceType = .photoLibrary
+            picker.delegate = self
+            picker.mediaTypes = ["public.movie"]
+            picker.videoQuality = .typeMedium
             picker.allowsEditing = true
             self?.present(picker, animated: true)
         }))
@@ -162,11 +197,18 @@ extension ChatViewController: MessageCellDelegate {
             guard let imageURL = media.url else { return }
             let photoVC = PhotoViewerViewController(url: imageURL)
             self.navigationController?.pushViewController(photoVC, animated: true)
+        case .video(let media):
+            guard let videoURL = media.url else { return }
+            // AVFoundation, AVkit을 사용하여 비디오 재생하는 VC 생성
+            let vc = AVPlayerViewController()
+            vc.player = AVPlayer(url: videoURL)
+            vc.player?.play()
+            present(vc, animated: true)
+            
         default:
             break
         }
     }
-
 }
 
 // MARK: - InputBarAccessoryViewDelegate
@@ -175,16 +217,18 @@ extension ChatViewController: InputBarAccessoryViewDelegate {
     
     func inputBar(_ inputBar: InputBarAccessoryView, didPressSendButtonWith text: String) {
         guard !text.replacingOccurrences(of: " ", with: "").isEmpty else { return }
+        inputBar.inputTextView.text = nil
         // 메세지 보내져야함
         if viewModel!.isNewConversation {
             // 새로운 대화 시작해야함
             viewModel?.createNewConversation(text: text, completion: { [weak self] in
-                print("새로운 대화 시작 성공")
+                // 새로운 대화 시작하면 메세지 바로 안뜨는 버그 해결 필요
+                print("새로운 대화방 추가")
             })
         } else {
             // 이미 존재하는 대화에 새로운 메세지 데이터 append
             viewModel?.sendMessage(text: text, completion: { [weak self] in
-                print("새로운 메세지 추가완료")
+                print("기존 대화에 새로운 메세지 추가")
             })
         }
     }
@@ -200,12 +244,18 @@ extension ChatViewController: UIImagePickerControllerDelegate, UINavigationContr
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         picker.dismiss(animated: true)
-        guard let image = info[UIImagePickerController.InfoKey.editedImage] as? UIImage,
-              let imageData = image.pngData() else { return }
-        // Firestore에 이미지 업로드 필요 + 이미지 메세지 보내기 필요
-        viewModel?.uploadAndSendImageData(data: imageData) {
-            print("imagePickerController - upload and send ImageData 성공")
+        // Firestore에 이미지 업로드 + 이미지 메세지 보내기
+        if let image = info[.editedImage] as? UIImage, let imageData = image.pngData() {
+            viewModel?.uploadAndSendImageData(data: imageData) {
+                print("imagePickerController - upload and send ImageData 성공")
+            }
+        } else if let videoURL = info[.mediaURL] as? URL {
+            // 동영상 업로드
+            viewModel?.uploadAndSendVideoData(videoURL: videoURL, completion: {
+                print("imagePickerController - uploadAndSendVideoData 성공")
+            })
         }
+
     }
     
     func configureMediaMessageImageView(_ imageView: UIImageView, for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) {

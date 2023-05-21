@@ -55,6 +55,5 @@ class NewConversationViewModel {
             hasFetched = true
             filterUsers(with: text, completion: completion)
         }
-
     }
 }

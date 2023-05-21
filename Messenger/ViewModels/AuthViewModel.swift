@@ -13,6 +13,9 @@ import GoogleSignIn
 
 class AuthViewModel {
     
+    /// 로그인 완료 후 실행, 클로저에 실행할 액션 정의 필요
+    var loginSucceed: () -> Void = { }
+    
     private func profilePictureFileName(email: String) -> String {
         let safeEmail = email.replacingOccurrences(of: ".", with: "-")
         return "\(safeEmail)_profile_picture.png"
@@ -30,6 +33,7 @@ class AuthViewModel {
                         UserDefaults.standard.set(downloadURL, forKey: "profile_picture_url")
                     case .failure(let error):
                         print("유저 이미지 저장 실패")
+                        print(error)
                     }
                 }
             UserDefaults.standard.set(credentials.email, forKey: "email")
@@ -39,25 +43,25 @@ class AuthViewModel {
     }
     
     func handleUserLogin(email: String, password: String, completion: @escaping (Bool) -> Void) {
-        AuthService.logUserIn(withEmail: email, password: password) { result, error in
+        AuthService.logUserIn(withEmail: email, password: password) { [weak self] result, error in
             guard error == nil else { completion(false); return }
             UserDefaults.standard.set(email, forKey: "email")
             completion(true)
+            self?.loginSucceed()
         }
     }
     
-    func handleFBLogin(controller: UIViewController, completion: @escaping (Bool) -> Void) {
+    func handleFBLogin(controller: UIViewController) {
         let fbLoginManager = LoginManager()
         fbLoginManager.logIn(permissions: ["email"], from: controller) { (result, error) -> Void in
             guard let result = result, error == nil else { return }
             if result.isCancelled {
                 print("로그인 취소")
-                completion(false)
                 return
             }
             if result.grantedPermissions.contains("email") {
                 guard let token = result.token?.tokenString as? String else { return }
-                AuthService.handleFBLogin(token: token) { email, userName, urlString  in
+                AuthService.handleFBLogin(token: token) { [weak self] email, userName, urlString  in
                     // url로 이미지 파일 받아서 저장하기
                     guard let url = URL(string: urlString) else { return }
                     URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
@@ -77,20 +81,19 @@ class AuthViewModel {
                     }.resume()
                     UserDefaults.standard.set(email, forKey: "email")
                     UserDefaults.standard.set(userName, forKey: "userName")
-                    completion(true)
+                    self?.loginSucceed()
                 }
             }
         }
     }
     
-    func handleGoogleLogin(controller: UIViewController, completion: @escaping (Bool) -> Void) {
+    func handleGoogleLogin(controller: UIViewController) {
         let clientID = FirebaseApp.app()?.options.clientID
         let config = GIDConfiguration(clientID: clientID!)
         GIDSignIn.sharedInstance.configuration = config
         GIDSignIn.sharedInstance.signIn(withPresenting: controller) { [weak self] result, error in
             guard let user = result?.user, error == nil else {
                 print(error?.localizedDescription as Any)
-                completion(false)
                 return
             }
             if ((user.profile?.hasImage) != nil) {
@@ -112,10 +115,10 @@ class AuthViewModel {
                     }
                 }.resume()
             }
-            AuthService.handleGoogleLogin(result: result) { email, userName in
+            AuthService.handleGoogleLogin(result: result) { [weak self] email, userName in
                 UserDefaults.standard.set(email, forKey: "email")
                 UserDefaults.standard.set(userName, forKey: "userName")
-                completion(true)
+                self?.loginSucceed()
             }
         }
     }

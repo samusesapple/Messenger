@@ -72,7 +72,7 @@ class ChatViewModel {
         ChatDatabaseManager.shared.sendMessage(id: conversationId,
                                                reciptientEmail: otherUserEmail,
                                                recipientName: otherUserName,
-                                               newMessage: message) { [weak self] success in
+                                               newMessage: message) { success in
             guard success else { print("기존 대화에 메세지 추가하기 실패"); return }
             completion()
         }
@@ -123,6 +123,48 @@ class ChatViewModel {
                                       messageId: messageId,
                                       sentDate: Date(),
                                       kind: .photo(media))
+                
+                ChatDatabaseManager.shared.sendMessage(id: conversationId,
+                                                       reciptientEmail: self!.otherUserEmail,
+                                                       recipientName: self!.otherUserName,
+                                                       newMessage: message) { success in
+                    if success {
+                        completion()
+                    } else {
+                        print("이미지 데이터 업로드 후, 메세지로 보내기 실패")
+                    }
+                }
+                // 메세지 보내기
+            case .failure(let error):
+                print(error)
+            }
+        }
+    }
+    
+    /// Database에 동영상 업로드 및 메세지에 동영상 첨부하여 보내기
+    func uploadAndSendVideoData(videoURL: URL, completion: @escaping () -> Void) {
+        guard let messageId = createMessageID(),
+        let conversationId = conversationId,
+        let sender = sender else { print("옵셔널 벗기기 실패"); return }
+        let imageMessageId = messageId.replacingOccurrences(of: "/", with: "-")
+        let safeImageMessageId = imageMessageId.replacingOccurrences(of: " ", with: "_") + ".mov"
+        let fileName = "video_message_" + safeImageMessageId
+        
+        StorageManager.shared.uploadMessageVideo(with: videoURL,
+                                                 fileName: fileName) { [weak self] result in
+            switch result {
+            case .success(let urlString):
+                print("메세지에 동영상 첨부해서 보내기 url: \(urlString)")
+                guard let url = URL(string: urlString),
+                      let placeholder = UIImage(systemName: "photo") else { return }
+                let media = Media(url: url,
+                                  image: nil,
+                                  placeholderImage: placeholder,
+                                  size: .zero)
+                let message = Message(sender: sender,
+                                      messageId: messageId,
+                                      sentDate: Date(),
+                                      kind: .video(media))
                 
                 ChatDatabaseManager.shared.sendMessage(id: conversationId,
                                                        reciptientEmail: self!.otherUserEmail,

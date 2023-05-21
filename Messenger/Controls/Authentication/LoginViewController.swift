@@ -16,7 +16,7 @@ class LoginViewController: UIViewController {
     
     // MARK: - Properties
     private var viewModel = AuthViewModel()
-    
+    private var loginObserver: NSObjectProtocol?
     private let progressHUD = JGProgressHUD(style: .dark)
     
     private let scrollView: UIScrollView = {
@@ -99,6 +99,10 @@ class LoginViewController: UIViewController {
                                                             style: .plain,
                                                             target: self,
                                                             action: #selector(handleRegisterButton))
+        viewModel.loginSucceed = { [weak self] in
+            self?.progressHUD.dismiss()
+            self?.dismiss(animated: true)
+        }
         configureUI()
         emailTextField.delegate = self
         passwordTextField.delegate = self
@@ -114,18 +118,12 @@ class LoginViewController: UIViewController {
     
     @objc func handleFacebookLogin() {
         progressHUD.show(in: view)
-        viewModel.handleFBLogin(controller: self) { [weak self] result in
-            self?.progressHUD.dismiss()
-            if result {self?.dismiss(animated: true)}
-        }
+        viewModel.handleFBLogin(controller: self)
     }
     
     @objc func handleGoogleLogin() {
         progressHUD.show(in: view)
-        viewModel.handleGoogleLogin(controller: self) { [weak self] result in
-            self?.progressHUD.dismiss()
-            if result {self?.dismiss(animated: true)}
-        }
+        viewModel.handleGoogleLogin(controller: self)
     }
     
     @objc func handleAppleLogin() {

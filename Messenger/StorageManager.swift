@@ -65,6 +65,25 @@ final class StorageManager {
         }
     }
     
+    /// Upload video that will be sent in a conversation message
+    func uploadMessageVideo(with fileURL: URL, fileName: String, completion: @escaping UploadPictureCompletion) {
+        storage.child("message_videos/\(fileName)").putFile(from: fileURL) { [weak self] metadata, error in
+            guard error == nil else {
+                print("Firebase에 동영상 데이터 업로드 실패")
+                completion(.failure(StorageErrors.failedToUpload))
+                return
+            }
+            self?.storage.child("message_videos/\(fileName)").downloadURL { url, error in
+                guard let urlString = url?.absoluteString, error == nil else {
+                    completion(.failure(StorageErrors.failedDownloadingURL))
+                    return
+                }
+                print("URL 다운로드 및 문자열 변환해서 Firebase에 *동영상* 저장 성공")
+                completion(.success(urlString))
+            }
+        }
+    }
+    
     func downloadURL(for path: String, completion: @escaping (URL) -> Void) {
             let reference = storage.child(path)
             reference.downloadURL { url, error in
